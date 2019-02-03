@@ -1,0 +1,47 @@
+#ip 1                   -> [A, ip, B, C, D, E]  A = 0, B = 0, C = 0, D = 0, E = 0
+[ 0] seti 123 0 5       E = 123                 E = 123
+// LINE #1
+[ 1] bani 5 456 5       E = E & 456             E = E & 456
+[ 2] eqri 5 72 5        E = E == 72 ? 1 : 0     if E == 72 goto LINE #5
+[ 3] addr 5 1 1         ip = ip + E
+[ 4] seti 0 0 1         ip = 0                  else goto LINE #1
+// LINE #5
+[ 5] seti 0 2 5         E = 0                   E = 0
+
+// Outer loop
+// LINE #6
+[ 6] bori 5 65536 4     D = E | 65536           D = E | 0x10000
+[ 7] seti 3935295 1 5   E = 3935295             E = 0x3C0C3F
+// LINE #8
+[ 8] bani 4 255 2       B = D & 255             B = D & 0xFF
+[ 9] addr 5 2 5         E = E + B               E = E + B
+[10] bani 5 16777215 5  E = E & 16777215        E = E & 0xFF FF FF
+[11] muli 5 65899 5     E = E * 65899           E = E * 0x1016B
+[12] bani 5 16777215 5  E = E & 16777215        E = E & 0xFF FF FF
+[13] gtir 256 4 2       B = 256 > D ? 1 : 0     if D <= 256 goto LINE #28
+[14] addr 2 1 1         ip = ip + B
+[15] addi 1 1 1         ip = ip + 1             else goto LINE #17
+[16] seti 27 1 1        ip = 27
+
+// Inner loop {
+// LINE #17
+[17] seti 0 5 2         B = 0                   B = 0
+// LINE #18
+[18] addi 2 1 3         C = B + 1               C = B + 1
+[19] muli 3 256 3       C = C * 256             C = C * 0x100
+[20] gtrr 3 4 3         C = C > D ? 1 : 0       if C > D goto LINE #26
+[21] addr 3 1 1         ip = ip + C
+[22] addi 1 1 1         ip = ip + 1             else goto LINE #24
+[23] seti 25 0 1        ip = 25
+// LINE #24
+[24] addi 2 1 2         B = B + 1               B = B + 1
+[25] seti 17 7 1        ip = 17                 goto LINE #18
+// LINE #26
+[26] setr 2 2 4         D = B                   D = B
+[27] seti 7 6 1         ip = 7                  goto LINE #8
+// }
+
+// LINE #28
+[28] eqrr 5 0 2         B = E == A ? 1 : 0      if E == A HALT
+[29] addr 2 1 1         ip = ip + B
+[30] seti 5 4 1         ip = 5                  else goto LINE #6
